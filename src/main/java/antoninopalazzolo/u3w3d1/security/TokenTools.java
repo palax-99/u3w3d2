@@ -17,6 +17,7 @@ public class TokenTools {
 
     private final String secret;
 
+
     public TokenTools(@Value("${jwt.secret}") String secret) {
         // @Value legge il valore di jwt.secret dall'application.properties
         // che a sua volta lo prende dall'env.properties
@@ -68,5 +69,17 @@ public class TokenTools {
             // il client riceverà un 401 e dovrà rifare il login
             throw new UnauthorizedException("Problemi col token! Effettua di nuovo il login!");
         }
+    }
+
+    public String extractIdFromToken(String token) {
+        // parser() legge il token
+        // getPayload() prende il payload
+        // getSubject() estrae il subject — cioè l'id che abbiamo messo quando abbiamo generato il token
+        return Jwts.parser()
+                .verifyWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
     }
 }
