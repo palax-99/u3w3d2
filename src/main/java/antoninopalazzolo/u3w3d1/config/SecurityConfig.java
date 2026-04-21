@@ -2,9 +2,12 @@ package antoninopalazzolo.u3w3d1.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -12,6 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 // @Configuration = classe di configurazione
 // @EnableWebSecurity = dice a Spring che questa classe
 // customizza le impostazioni di Spring Security
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Bean
@@ -37,5 +41,10 @@ public class SecurityConfig {
                 req.requestMatchers("/**").permitAll());
 
         return httpSecurity.build();
+    }
+
+    @Bean
+    public PasswordEncoder getBCrypt() {
+        return new BCryptPasswordEncoder(12);
     }
 }
